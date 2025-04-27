@@ -67,10 +67,6 @@ public class OrderEntity {
         return this;
     }
 
-    public OrderEntity addProduct(List<ProductEntity> product) {
-        product.forEach(this::addProduct);
-        return this;
-    }
 
 }
 
