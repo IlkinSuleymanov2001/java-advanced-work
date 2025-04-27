@@ -2,6 +2,7 @@ package com.example.demo.config;
 
 
 import com.example.demo.config.filter.CustomSecurityFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -21,17 +22,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class WebFilterConfig {
 
-
+private final CustomSecurityFilter customSecurityFilter;
     // User Creation
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder encoder) {
         // InMemoryUserDetailsManager setup with two users
         UserDetails admin = User.withUsername("ilkin01")
                 .password(encoder.encode("123"))
-                .roles("ADMIN", "USER")
+                .roles("ADMIN")
                 .build();
 
         UserDetails user = User.withUsername("ilkin")
@@ -46,8 +48,7 @@ public class WebFilterConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .addFilterBefore(new CustomSecurityFilter(),
-                        UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(customSecurityFilter,UsernamePasswordAuthenticationFilter.class)
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for simplicity
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/v1/card/**").permitAll() // Permit all access

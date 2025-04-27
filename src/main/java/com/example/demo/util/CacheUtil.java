@@ -25,7 +25,7 @@ public class CacheUtil {
     public <T> void saveToCache(String cacheKey, T value, Long expireTime, TemporalUnit temporalUnit) {
         RBucket<Object> bucket = redissonClient.getBucket(cacheKey);
         bucket.set(value);
-         bucket.expire(Duration.of(expireTime,temporalUnit));
+        bucket.expire(Duration.of(expireTime,temporalUnit));
 
     }
 
